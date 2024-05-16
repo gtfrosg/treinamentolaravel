@@ -1,4 +1,10 @@
 @extends('main')
 @section('content')
-	    Ainda não há livros cadastrados nesse sistema
+@forelse($livros as $livro)
+<br>
+@include('livros.partials.filds')
+<br>
+@empty
+  Ainda não há livros cadastrados nesse sistema
+@endforelse
 @endsection

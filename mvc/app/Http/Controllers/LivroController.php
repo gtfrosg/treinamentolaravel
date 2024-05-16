@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Livro;
 
 class LivroController extends Controller
 {
 	public function index(){
-	return view('livros.index');
+	    $livros = Livro::all();
+	    return view('livros.index',[
+	        'livros' => $livros
+	    ]);
 	}
 	public function show($isbn){
-	    if($isbn=='123456')
-	$livro = "Quincas Borba - Machado de Assis";
-	    else
-	$livro = "Livro Não indentigicado";
-
-	return view('livros.show',[
-	    'livro' => $livro,
-	]);
+	    $livro = Livro::where('isbn',$isbn)->first();
+	    return view('livros.show',[
+	        'livro' => $livro,
+	    ]);
 	}
 }

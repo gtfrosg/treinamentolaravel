@@ -1,4 +1,4 @@
 @extends('main')
 @section('content')
-	{{ $livro }}
+@include('livros.partials.filds')
 @endsection
