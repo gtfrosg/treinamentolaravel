@@ -1,3 +1,40 @@
+Quando eu estiver cloner localmente um repositório no github isso deve ser feito:
+
+-git clone (aquele link do diretório no git) -> para ter o diretório localmente
+-entrar na pasta do projeto -> para editar arquivo .env
+-cp .env.example .env -> para copiar arquivo .env e depois edita-lo adicionando o banco de dados
+-composer install -> para baixar as dependencias do projeto
+-php artisan migrate -> para migrar o necessário relativamente ao projeto
+-php artisan key:generate -> para funcionar o banco
+
+
+-se o compando php artisan migrate não funcionar pode ser que seja por conta do fato haver um problema com a conecção do banco. o seguinte problema pode estar aparecendo:
+
+➜  crud git:(master) ✗ php artisan migrate
+
+   InvalidArgumentException 
+
+  Database connection [mariadb] not configured.
+
+  at vendor/laravel/framework/src/Illuminate/Database/DatabaseManager.php:161
+    157▕         // If the configuration doesn't exist, we'll throw an exception and bail.
+    158▕         $connections = $this->app['config']['database.connections'];
+    159▕ 
+    160▕         if (is_null($config = Arr::get($connections, $name))) {
+  ➜ 161▕             throw new InvalidArgumentException("Database connection [{$name}] not configured.");
+    162▕         }
+    163▕ 
+    164▕         return (new ConfigurationUrlParser)
+    165▕                     ->parseConfiguration($config);
+
+      +22 vendor frames 
+  23  artisan:35
+      Illuminate\Foundation\Console\Kernel::handle()
+
+Se isso aparecer é porque você ainda não configurou o arquivo config/database.php do seu projeto ainda.
+
+você deve abrir esse arquivo ele se apresentará da seguinte forma a você, a -> indica as linhas que você deve adicionar:
+
 <?php
 
 use Illuminate\Support\Str;
@@ -89,22 +126,23 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-        ],
-
-	'mariadb' => [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'your_database_name'),
-            'username' => env('DB_USERNAME', 'your_username'),
-            'password' => env('DB_PASSWORD', 'your_password'),
-	    'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-	    'strict' => true,
-	    'engine' => null,
-	]
-	//outras configurações de banco de dados, se necessário
+        ]
+-> ,
+->
+->        'mariadb' => [
+->            'driver' => 'mysql',
+->            'host' => env('DB_HOST', '127.0.0.1'),
+->            'port' => env('DB_PORT', '3306'),
+->            'database' => env('DB_DATABASE', 'your_database_name'),
+->            'username' => env('DB_USERNAME', 'your_username'),
+->            'password' => env('DB_PASSWORD', 'your_password'),
+->            'unix_socket' => env('DB_SOCKET', ''),
+->            'charset' => 'utf8',
+->            'prefix' => '',
+->            'strict' => true,
+->            'engine' => null,
+->        ]
+->        //outras configurações de banco de dados, se necessário
     ],
 
     /*
@@ -115,6 +153,7 @@ return [
     | This table keeps track of all the migrations that have already run for
     | your application. Using this information, we can determine which of
     | the migrations on disk haven't actually been run in the database.
+    |
     |
     */
 
@@ -159,3 +198,5 @@ return [
     ],
 
 ];
+
+-Após você adicionar essas linhas no seu arquivo config/database.php você estará apto para rodar o php artisan migrate
