@@ -70,7 +70,9 @@ class LivroController extends Controller
      */
     public function edit(Livro $livro)
     {
-        //
+        return view('livros.edit',[
+	    'livro' => $livro
+	]);
     }
 
     /**
@@ -82,7 +84,11 @@ class LivroController extends Controller
      */
     public function update(UpdateLivroRequest $request, Livro $livro)
     {
-        //
+	$livro->titulo = $request->titulo;
+	$livro->autor = $request->autor;
+	$livro->isbn = $request->isbn;
+	$livro->save();
+	return redirect("/livros/{$livro->id}");
     }
 
     /**
